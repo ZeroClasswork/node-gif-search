@@ -11,6 +11,9 @@ const Tenor = require("tenorjs").client({
 // Setup Express App
 const app = express();
 
+// Setup styling
+app.use(express.static('public'));
+
 // Middleware
 const exphbs  = require('express-handlebars');
 
@@ -32,7 +35,18 @@ app.get('/', (req, res) => {
             // pass the gifs as an object into the home page
             res.render('home', { gifs })
         }).catch(console.error);
-  })
+})
+
+app.get('/trending', (req, res) => {
+    // View trending
+    Tenor.Trending.GIFs("10")
+        .then(Results => {
+            // store the gifs we get back from the search
+            const gifs = Results;
+            // pass the gifs as an object into the home page
+            res.render('home', { gifs })
+        }).catch(console.error);
+})
 
 app.get('/greetings/:name', (req, res) => {
     // grab the name from the path provided
